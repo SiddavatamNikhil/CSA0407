@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 50
+
+struct {
+    char fname[30];   
+    int size;         
+} dir[MAX];
+
+int fileCount = 0;
+
+
+void createFile() {
+    char name[30];
+    int size;
+
+    printf("Enter file name: ");
+    scanf("%s", name);
+
+    
+    for (int i = 0; i < fileCount; i++) {
+        if (strcmp(dir[i].fname, name) == 0) {
+            printf("Error: File with name '%s' already exists!\n", name);
+            return;
+        }
+    }
+
+    printf("Enter file size: ");
+    scanf("%d", &size);
+
+    strcpy(dir[fileCount].fname, name);
+    dir[fileCount].size = size;
+    fileCount++;
+
+    printf("File '%s' created successfully.\n", name);
+}
+
+
+void deleteFile() {
+    char name[30];
+    printf("Enter file name to delete: ");
+    scanf("%s", name);
+
+    for (int i = 0; i < fileCount; i++) {
+        if (strcmp(dir[i].fname, name) == 0) {
+            
+            for (int j = i; j < fileCount - 1; j++) {
+                dir[j] = dir[j + 1];
+            }
+            fileCount--;
+            printf("File '%s' deleted successfully.\n", name);
+            return;
+        }
+    }
+    printf("Error: File '%s' not found!\n", name);
+}
+
+
+void searchFile() {
+    char name[30];
+    printf("Enter file name to search: ");
+    scanf("%s", name);
+
+    for (int i = 0; i < fileCount; i++) {
+        if (strcmp(dir[i].fname, name) == 0) {
+            printf("File found: %s (Size: %d)\n", dir[i].fname, dir[i].size);
+            return;
+        }
+    }
+    printf("File '%s' not found!\n", name);
+}
+
+
+void displayDirectory() {
+    if (fileCount == 0) {
+        printf("Directory is empty.\n");
+        return;
+    }
+
+    printf("\nDirectory Contents:\n");
+    printf("----------------------------\n");
+    printf("File Name\tSize\n");
+    printf("----------------------------\n");
+    for (int i = 0; i < fileCount; i++) {
+        printf("%s\t\t%d\n", dir[i].fname, dir[i].size);
+    }
+    printf("----------------------------\n");
+}
+
+int main() {
+    int choice;
+    while (1) {
+        printf("\n--- Single Level Directory ---\n");
+        printf("1. Create File\n");
+        printf("2. Delete File\n");
+        printf("3. Search File\n");
+        printf("4. Display Directory\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: createFile(); break;
+            case 2: deleteFile(); break;
+            case 3: searchFile(); break;
+            case 4: displayDirectory(); break;
+            case 5: return 0;
+            default: printf("Invalid choice! Try again.\n");
+        }
+    }
+}
