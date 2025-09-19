@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>   
+#include <errno.h>
+
+int main(int argc, char *argv[]) {
+    DIR *d;
+    struct dirent *dir;
+    char *dirname;
+
+    
+    if (argc < 2) {
+        dirname = ".";
+    } else {
+        dirname = argv[1];
+    }
+
+    
+    d = opendir(dirname);
+    if (d == NULL) {
+        perror("Error opening directory");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Contents of directory: %s\n", dirname);
+    
+    while ((dir = readdir(d)) != NULL) {
+        printf("%s\n", dir->d_name);
+    }
+
+    closedir(d);
+    return 0;
+}
