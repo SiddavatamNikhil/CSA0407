@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <fcntl.h>      
+#include <unistd.h>    
+#include <string.h>    
+#include <stdlib.h>     
+
+int main() {
+    int fd;
+    char buffer[100];
+    ssize_t bytesRead, bytesWritten;
+
+   
+    fd = open("demo.txt", O_CREAT | O_RDWR, 0644);
+    if (fd == -1) {
+        perror("Error opening file");
+        exit(1);
+    }
+    printf("File 'demo.txt' opened successfully with fd = %d\n", fd);
+
+    
+    char text[] = "Hello, this is a demonstration of UNIX system calls for file management.\n";
+    bytesWritten = write(fd, text, strlen(text));
+    if (bytesWritten == -1) {
+        perror("Error writing to file");
+        close(fd);
+        exit(1);
+    }
+    printf("Written %zd bytes to the file.\n", bytesWritten);
+
+
+    if (lseek(fd, 0, SEEK_SET) == -1) {
+        perror("Error seeking in file");
+        close(fd);
+        exit(1);
+    }
+
+    bytesRead = read(fd, buffer, sizeof(buffer)-1);
+    if (bytesRead == -1) {
+        perror("Error reading from file");
+        close(fd);
+        exit(1);
+    }
+    buffer[bytesRead] = '\0';  
+    printf("Data read from file:\n%s\n", buffer);
+
+    
+    if (close(fd) == -1) {
+        perror("Error closing file");
+        exit(1);
+    }
+    printf("File closed successfully.\n");
+
+    return 0;
+}
